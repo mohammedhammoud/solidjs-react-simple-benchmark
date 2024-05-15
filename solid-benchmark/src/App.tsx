@@ -9,7 +9,7 @@ type GalleryItemProps = {
 };
 
 const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
-  const [url, setUrl] = createSignal<string>();
+  // const [url, setUrl] = createSignal<string>();
 
   // test after image loading
 
@@ -31,7 +31,7 @@ const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
 
   return (
     <div class={styles["gallery__item"]}>
-      <img src={url()} alt="" />
+      {/* <img src={url()} alt="" /> */}
       <img src={`https://picsum.photos/200/200?random=${index}`} alt="" onload={onRender} onerror={onRender} />
     </div>
   );
