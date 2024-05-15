@@ -2,36 +2,32 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 
 const TOTAL_ITEMS_TO_RENDER = 10000;
+const IMAGE: string = 'unique'; // 'unique' | 'same' | 'none';
+
+const getImageUrl = (index: number) => {
+  switch (IMAGE) {
+    case 'unique':
+      return `https://picsum.photos/200/200?random=${index}`;
+    case 'same':
+      return `https://picsum.photos/200/200`;
+  }
+}
 
 type GalleryItemProps = {
   index: number;
   onRender: () => void;
+  withImage?: boolean;
 };
 
 const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
-  const [url, setUrl] = useState<string>();
-
-  // test after image loading
-
   useEffect(() => {
-    const image = new Image();
-    image.src = `https://picsum.photos/200/200?random=${index}`;
-    // image.src = `https://picsum.photos/200/200`;
-    image.onload = () => {
-      setUrl(image.src);
+    if (IMAGE === 'none') {
       onRender();
     }
-    image.onerror = onRender;
-  }, [index, onRender]);
-
-  // // test directly after mounting
-  // useEffect(() => {
-  //   onRender();
-  // }, [onRender]);
-
+  }, [onRender]);
   return (
     <div className="gallery__item">
-      <img src={url} alt="" />
+      {IMAGE !== 'none' ? <img src={getImageUrl(index)} alt="" onLoad={onRender} onError={onRender} /> : null}
     </div>
   );
 };

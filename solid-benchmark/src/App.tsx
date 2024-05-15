@@ -2,6 +2,16 @@ import { For, Show, createSignal, onMount } from 'solid-js';
 import styles from './App.module.css';
 
 const TOTAL_ITEMS_TO_RENDER = 10000;
+const IMAGE: string = 'unique'; // 'unique' | 'same' | 'none';
+
+const getImageUrl = (index: number) => {
+  switch (IMAGE) {
+    case 'unique':
+      return `https://picsum.photos/200/200?random=${index}`;
+    case 'same':
+      return `https://picsum.photos/200/200`;
+  }
+}
 
 type GalleryItemProps = {
   index: number;
@@ -9,30 +19,15 @@ type GalleryItemProps = {
 };
 
 const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
-  // const [url, setUrl] = createSignal<string>();
-
-  // test after image loading
-
-  // onMount(() => {
-  //   const image = new Image();
-  //   image.src = `https://picsum.photos/200/200?random=${index}`;
-  //   // image.src = `https://picsum.photos/200/200`;
-  //   image.onload = () => {
-  //     setUrl(image.src)
-  //     onRender();
-  //   };
-  //   image.onerror = onRender;
-  // });
-
-  // // test directly after mounting
-  // onMount(() => {
-  //   onRender();
-  // });
+  onMount(() => {
+    if (IMAGE === 'none') {
+      onRender();
+    }
+  });
 
   return (
     <div class={styles["gallery__item"]}>
-      {/* <img src={url()} alt="" /> */}
-      <img src={`https://picsum.photos/200/200?random=${index}`} alt="" onload={onRender} onerror={onRender} />
+      {IMAGE !== 'none' ? <img src={getImageUrl(index)} alt="" onLoad={onRender} onError={onRender} /> : null}
     </div>
   );
 };
