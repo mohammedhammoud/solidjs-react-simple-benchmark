@@ -1,4 +1,4 @@
-import { createSignal, onMount } from 'solid-js';
+import { For, Show, createSignal, onMount } from 'solid-js';
 import styles from './App.module.css';
 
 const TOTAL_ITEMS_TO_RENDER = 10000;
@@ -32,9 +32,12 @@ const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
   return (
     <div class={styles["gallery__item"]}>
       <img src={url()} alt="" />
+      {/* <img src={`https://picsum.photos/200/200?random=${index}`} alt="" onload={onRender} onerror={onRender} /> */}
     </div>
   );
 };
+
+const items = Array.from({ length: TOTAL_ITEMS_TO_RENDER }, (_, i) => i);
 
 type GalleryProps = {
   onRenderedAllItems: () => void;
@@ -54,9 +57,9 @@ const Gallery = ({ onRenderedAllItems }: GalleryProps) => {
     <div class={styles.gallery}>
       <h1>Gallery</h1>
       <div class={styles["gallery__container"]}>
-        {Array.from({ length: TOTAL_ITEMS_TO_RENDER }, (_, i) => i).map((index) => (
-          <GalleryItem index={index} onRender={onRenderItem} />
-        ))}
+        <For each={items} fallback={<p>Loading...</p>}>
+          {(index) => <GalleryItem index={index} onRender={onRenderItem} />}
+        </For>
       </div>
     </div>
   );
@@ -86,7 +89,9 @@ const App = () => {
 
   return (
     <div class={styles.App}>
-      {!endTime() ? <p>Loading...</p> : startTime() ? <p>Rendering {TOTAL_ITEMS_TO_RENDER} items took {(endTime?.()! - startTime?.()!) / 1000} seconds</p> : null}
+      <Show when={endTime() && startTime()} fallback={<p>Rendering...</p>}>
+        <p>Rendering {TOTAL_ITEMS_TO_RENDER} items took {(endTime?.()! - startTime?.()) / 1000} seconds</p>
+      </Show>
       <Gallery onRenderedAllItems={onRenderedAllItems} />
       <VideoPlayer />
     </div>
