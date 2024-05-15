@@ -13,16 +13,16 @@ const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
 
   // test after image loading
 
-  onMount(() => {
-    const image = new Image();
-    image.src = `https://picsum.photos/200/200?random=${index}`;
-    // image.src = `https://picsum.photos/200/200`;
-    image.onload = () => {
-      setUrl(image.src)
-      onRender();
-    };
-    image.onerror = onRender;
-  });
+  // onMount(() => {
+  //   const image = new Image();
+  //   image.src = `https://picsum.photos/200/200?random=${index}`;
+  //   // image.src = `https://picsum.photos/200/200`;
+  //   image.onload = () => {
+  //     setUrl(image.src)
+  //     onRender();
+  //   };
+  //   image.onerror = onRender;
+  // });
 
   // // test directly after mounting
   // onMount(() => {
@@ -32,7 +32,7 @@ const GalleryItem = ({ index, onRender }: GalleryItemProps) => {
   return (
     <div class={styles["gallery__item"]}>
       <img src={url()} alt="" />
-      {/* <img src={`https://picsum.photos/200/200?random=${index}`} alt="" onload={onRender} onerror={onRender} /> */}
+      <img src={`https://picsum.photos/200/200?random=${index}`} alt="" onload={onRender} onerror={onRender} />
     </div>
   );
 };
@@ -72,7 +72,7 @@ const VideoPlayer = () => {
   return (
     <div class={styles["video-player"]}>
       <span>Time: {time()}</span>
-      <video controls autoplay loop muted onTimeUpdate={(e) => setTime(time() + 1)}>
+      <video controls autoplay loop muted onTimeUpdate={(e) => setTime((prev) => prev + 1)}>
         <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
       </video>
     </div >
@@ -80,7 +80,7 @@ const VideoPlayer = () => {
 };
 
 const App = () => {
-  const [startTime, setStartTime] = createSignal<number>(performance.now());
+  const startTime = performance.now();
   const [endTime, setEndTime] = createSignal<number>();
 
   const onRenderedAllItems = () => {
@@ -89,8 +89,8 @@ const App = () => {
 
   return (
     <div class={styles.App}>
-      <Show when={endTime() && startTime()} fallback={<p>Rendering...</p>}>
-        <p>Rendering {TOTAL_ITEMS_TO_RENDER} items took {(endTime?.()! - startTime?.()) / 1000} seconds</p>
+      <Show when={startTime && endTime()} fallback={<p>Rendering...</p>}>
+        <p>Rendering {TOTAL_ITEMS_TO_RENDER} items took {(endTime?.()! - startTime) / 1000} seconds</p>
       </Show>
       <Gallery onRenderedAllItems={onRenderedAllItems} />
       <VideoPlayer />
