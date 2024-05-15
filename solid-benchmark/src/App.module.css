@@ -1,0 +1,32 @@
+.App {
+  text-align: center;
+}
+
+.gallery__container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.gallery__item {
+  margin: 10px;
+  width: 200px;
+  height: 200px;
+  background-color: #f0f0f0;
+}
+
+.video-player {
+  position: fixed;
+  width: 500px;
+  height: 300px;
+  bottom: 80px;
+  right: 20px;
+  background: red;
+  color: white;
+}
+
+.video-player video {
+  width: 100%;
+  height: 100%;
+}
